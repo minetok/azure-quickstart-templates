@@ -1,0 +1,44 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "type": "string",
+      "metadata": {
+          "description": "The Location of SqlVirtualMachine resource, should be same as the underlying Virtual Machine."
+        }
+    },
+    "virtualMachineName": {
+      "type": "string",
+      "metadata": {
+       "description": "The Virtual Machine Name."
+      }
+    },
+    "sqlServerLicenseType": {
+      "type": "string",
+      "allowedValues": [
+          "PAYG",
+          "AHUB"
+        ],
+      "defaultValue": "PAYG",
+        "metadata": {
+          "description": "The SQL Server License Type."
+        }
+    }
+  },
+  "variables": {
+    "VmResourceId": "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachineName'))]"
+  },
+  "resources": [
+    {
+      "name": "[parameters('virtualMachineName')]",
+      "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+      "apiVersion": "2017-03-01-preview",
+      "location": "[parameters('location')]",
+      "properties": {
+        "virtualMachineResourceId": "[variables('VmResourceId')]",
+        "SqlServerLicenseType":"[parameters('sqlServerLicenseType')]"
+      }
+    }
+  ]
+}
